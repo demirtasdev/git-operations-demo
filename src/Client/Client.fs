@@ -15,22 +15,22 @@ open Shared
 // in this case, we are keeping track of a counter
 // we mark it as optional, because initially it will not be available from the client
 // the initial value will be requested from server
-type Model = { Counter: Counter option }
+type Model = { Counter: SayKizim option }
 
 // The Msg type defines what events/actions can occur while the application is running
 // the state of the application changes *only* in reaction to these events
 type Msg =
-    | Increment
-    | Decrement
-    | InitialCountLoaded of Counter
+    | Yuksel
+    | Alcal
+    | BurdanBasla of SayKizim
 
-let initialCounter () = Fetch.fetchAs<Counter> "/api/init"
+let initialCounter () = Fetch.fetchAs<SayKizim> "/api/init"
 
 // defines the initial state and initial command (= side-effect) of the application
 let init () : Model * Cmd<Msg> =
     let initialModel = { Counter = None }
     let loadCountCmd =
-        Cmd.OfPromise.perform initialCounter () InitialCountLoaded
+        Cmd.OfPromise.perform initialCounter () BurdanBasla
     initialModel, loadCountCmd
 
 // The update function computes the next state of the application based on the current state and the incoming events/messages
@@ -38,13 +38,13 @@ let init () : Model * Cmd<Msg> =
 // these commands in turn, can dispatch messages to which the update function will react.
 let update (msg : Msg) (currentModel : Model) : Model * Cmd<Msg> =
     match currentModel.Counter, msg with
-    | Some counter, Increment ->
+    | Some counter, Yuksel ->
         let nextModel = { currentModel with Counter = Some { Value = counter.Value + 1 } }
         nextModel, Cmd.none
-    | Some counter, Decrement ->
+    | Some counter, Alcal ->
         let nextModel = { currentModel with Counter = Some { Value = counter.Value - 1 } }
         nextModel, Cmd.none
-    | _, InitialCountLoaded initialCount->
+    | _, BurdanBasla initialCount->
         let nextModel = { Counter = Some initialCount }
         nextModel, Cmd.none
     | _ -> currentModel, Cmd.none
@@ -57,7 +57,7 @@ let safeComponents =
                [ str "SAFE  "
                  str Version.template ]
              str ", "
-             a [ Href "https://saturnframework.github.io" ] [ str "Saturn" ]
+             a [ Href "https://saturnframework.gggggggithub.io" ] [ str "Saturn" ]
              str ", "
              a [ Href "http://fable.io" ] [ str "Fable" ]
              str ", "
@@ -93,10 +93,10 @@ let view (model : Model) (dispatch : Msg -> unit) =
 
           Container.container []
               [ Content.content [ Content.Modifiers [ Modifier.TextAlignment (Screen.All, TextAlignment.Centered) ] ]
-                    [ Heading.h3 [] [ str ("Press buttons to manipulate counter: " + show model) ] ]
+                    [ Heading.h3 [] [ str ("This is a wooooooba: " + show model) ] ]
                 Columns.columns []
-                    [ Column.column [] [ button "-" (fun _ -> dispatch Decrement) ]
-                      Column.column [] [ button "+" (fun _ -> dispatch Increment) ] ] ]
+                    [ Column.column [] [ button "+" (fun _ -> dispatch Alcal) ]
+                      Column.column [] [ button "-" (fun _ -> dispatch Yuksel) ] ] ]
 
           Footer.footer [ ]
                 [ Content.content [ Content.Modifiers [ Modifier.TextAlignment (Screen.All, TextAlignment.Centered) ] ]
