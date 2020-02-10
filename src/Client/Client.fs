@@ -15,37 +15,37 @@ open Shared
 // in this case, we are keeping track of a counter
 // we mark it as optional, because initially it will not be available from the client
 // the initial value will be requested from server
-type Model = { Counter: Counter option }
+type Model = { SaygicKardes: Counter option }
 
 // The Msg type defines what events/actions can occur while the application is running
 // the state of the application changes *only* in reaction to these events
 type Msg =
-    | Increment
-    | Decrement
-    | InitialCountLoaded of Counter
+    | YukselKarder
+    | AlcalIt
+    | BurasiBaslangic of Counter
 
 let initialCounter () = Fetch.fetchAs<Counter> "/api/init"
 
 // defines the initial state and initial command (= side-effect) of the application
 let init () : Model * Cmd<Msg> =
-    let initialModel = { Counter = None }
+    let initialModel = { SaygicKardes = None }
     let loadCountCmd =
-        Cmd.OfPromise.perform initialCounter () InitialCountLoaded
+        Cmd.OfPromise.perform initialCounter () BurasiBaslangic
     initialModel, loadCountCmd
 
 // The update function computes the next state of the application based on the current state and the incoming events/messages
 // It can also run side-effects (encoded as commands) like calling the server via Http.
 // these commands in turn, can dispatch messages to which the update function will react.
 let update (msg : Msg) (currentModel : Model) : Model * Cmd<Msg> =
-    match currentModel.Counter, msg with
-    | Some counter, Increment ->
-        let nextModel = { currentModel with Counter = Some { Value = counter.Value + 1 } }
+    match currentModel.SaygicKardes, msg with
+    | Some counter, YukselKarder ->
+        let nextModel = { currentModel with SaygicKardes = Some { Value = counter.Value + 1 } }
         nextModel, Cmd.none
-    | Some counter, Decrement ->
-        let nextModel = { currentModel with Counter = Some { Value = counter.Value - 1 } }
+    | Some counter, AlcalIt ->
+        let nextModel = { currentModel with SaygicKardes = Some { Value = counter.Value - 1 } }
         nextModel, Cmd.none
-    | _, InitialCountLoaded initialCount->
-        let nextModel = { Counter = Some initialCount }
+    | _, BurasiBaslangic initialCount->
+        let nextModel = { SaygicKardes = Some initialCount }
         nextModel, Cmd.none
     | _ -> currentModel, Cmd.none
 
@@ -54,14 +54,14 @@ let safeComponents =
     let components =
         span [ ]
            [ a [ Href "https://github.com/SAFE-Stack/SAFE-template" ]
-               [ str "SAFE  "
+               [ str "AFE  "
                  str Version.template ]
              str ", "
              a [ Href "https://saturnframework.github.io" ] [ str "Saturn" ]
              str ", "
              a [ Href "http://fable.io" ] [ str "Fable" ]
              str ", "
-             a [ Href "https://elmish.github.io" ] [ str "Elmish" ]
+             a [ Href "https://elmish.gitasdfasdhub.io" ] [ str "Elmish" ]
              str ", "
              a [ Href "https://fulma.github.io/Fulma" ] [ str "Fulma" ]
 
@@ -74,8 +74,8 @@ let safeComponents =
           components ]
 
 let show = function
-    | { Counter = Some counter } -> string counter.Value
-    | { Counter = None   } -> "Loading..."
+    | { SaygicKardes = Some counter } -> string counter.Value
+    | { SaygicKardes = None   } -> "Loading..."
 
 let button txt onClick =
     Button.button
@@ -89,14 +89,14 @@ let view (model : Model) (dispatch : Msg -> unit) =
         [ Navbar.navbar [ Navbar.Color IsPrimary ]
             [ Navbar.Item.div [ ]
                 [ Heading.h2 [ ]
-                    [ str "SAFE Template" ] ] ]
+                    [ str "SAE Template" ] ] ]
 
           Container.container []
               [ Content.content [ Content.Modifiers [ Modifier.TextAlignment (Screen.All, TextAlignment.Centered) ] ]
                     [ Heading.h3 [] [ str ("Press buttons to manipulate counter: " + show model) ] ]
                 Columns.columns []
-                    [ Column.column [] [ button "-" (fun _ -> dispatch Decrement) ]
-                      Column.column [] [ button "+" (fun _ -> dispatch Increment) ] ] ]
+                    [ Column.column [] [ button "-" (fun _ -> dispatch AlcalIt) ]
+                      Column.column [] [ button "+" (fun _ -> dispatch YukselKarder) ] ] ]
 
           Footer.footer [ ]
                 [ Content.content [ Content.Modifiers [ Modifier.TextAlignment (Screen.All, TextAlignment.Centered) ] ]
